@@ -83,11 +83,6 @@ InitClk();
 Bdisp_PutDisp_DD();
 
 restart = 0;
-for (temp1 = 0; temp1 < 9; temp1++)
-{
-for (temp2 = 0; temp2 < 9; temp2++)
-{
-recalcprob(casex, casey);
 }}
 do
 {
@@ -316,6 +311,36 @@ recalcprob (casex, casey);
 return 1;
 }
 
+int recalcprobfeuille(casex, casey)
+{
+if (feuille[casex][casey] > 0)
+{
+for (temp1 =0; temp1 <9; temp1++)
+{
+temp2 = temp1 + 1;
+if(chiffre[casex][casey].val[temp2] != 0 ) { chiffre[casex][casey].val[temp2] = 0; combi[casex][casey]--; }
+if(chiffre[casex][temp1].val[feuille[casex][casey]] != 0 ) { chiffre[casex][temp1].val[feuille[casex][casey]] = 0; combi[casex][temp1]--; }
+if(chiffre[temp1][casey].val[feuille[casex][casey]] != 0 ) { chiffre[temp1][casey].val[feuille[casex][casey]] = 0; combi[temp1][casey]--; }
+}
+
+casex = casex / 3;
+casex = 3 * casex;
+casey = casey / 3;
+casey = 3 * casey;
+
+for (temp1 = 0; temp1 < 3; temp1++)
+{
+for (temp2 = 0; temp2 < 3; temp2++)
+{
+
+if (chiffre[temp1 + casex][temp2 + casey].val[rnd] != 0 )
+{
+chiffre[temp1 + casex][temp2 + casey].val[rnd] = 0;
+combi[temp1 + casex][temp2 + casey]--;
+}}}
+}
+}
+
 int recalcprob(casex, casey)
 {
 if (grille[casex][casey] > 0)
@@ -404,6 +429,24 @@ PrintMini(7*temp1+2, 7*temp2+2, &nbr, MINI_OR);
 }
 }
 }
+
+for (temp1 = 0 ; temp1 < 9 ; temp1++)
+{
+for (temp2 = 0 ; temp2 < 9 ; temp2++)
+{
+chiffre[temp1][temp2].val[0] = 0;
+for (temp3 = 1; temp3 <10; temp3++)
+{
+chiffre[temp1][temp2].val[temp3] = 1;
+}}}
+
+for (temp1 = 0; temp1 < 9; temp1++)
+{
+for (temp2 = 0; temp2 < 9; temp2++)
+{
+recalcprobfeuille(temp1, temp2);
+}}
+
 
 return 1;
 }

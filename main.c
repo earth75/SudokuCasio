@@ -237,13 +237,13 @@ int Solveur()
   }
   }
   
-  do
+  do // boucle de résolution
   {
     for (temp1 = 0; temp1 < 9; temp1++)
   {
      for (temp2 = 1; temp2 < 10; temp2++)
   {
-    for (temp3 = 0; temp3 < 9; temp1++)
+    for (temp3 = 0; temp3 < 9; temp1++) //lignes
   {
     places = 0;
     if (chiffre[temp1][temp3].val[temp2] == 1)
@@ -259,7 +259,7 @@ int Solveur()
     recalcprob(temp1, temp3);
   }
   
-  for (temp3 = 0; temp3 < 9; temp1++)
+  for (temp3 = 0; temp3 < 9; temp1++) // colonnes
   {
     places = 0;
     if (chiffre[temp3][temp1].val[temp2] == 1)
@@ -275,8 +275,21 @@ int Solveur()
     recalcprob(temp3, temp1);
   }
   
-  
-  
+  for (temp3 = 0; temp3 < 9; temp1++) // carrés
+  {
+    places = 0;
+    if (chiffre[temp3 % 3 + temp1 % 3][temp3 / 3 + temp1 / 3].val[temp2] == 1)
+    { places++;}
+  }
+  if (places == 1)
+  {
+    temp3 = 0;
+    while(chiffre[temp3 % 3 + temp1 % 3][temp3 / 3 + temp1 / 3].val[temp2] == 0)
+    {temp3++;}
+    grille[temp3 % 3 + temp1 % 3][temp3 / 3 + temp1 / 3] = temp2;
+    rempli++;
+    recalcprob((temp3 % 3 + temp1 % 3), (temp3 / 3 + temp1 / 3));
+  }
   
   }while (rempli < 81);
     

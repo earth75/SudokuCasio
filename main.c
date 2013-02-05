@@ -83,6 +83,12 @@ InitClk();
 Bdisp_PutDisp_DD();
 
 restart = 0;
+for (temp1 = 0; temp1 < 9; temp1++)
+{
+for (temp2 = 0; temp2 < 9; temp2++)
+{
+recalcprob(casex, casey);
+}}
 do
 {
 controle(); 

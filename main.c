@@ -212,8 +212,75 @@ Bdisp_PutDisp_DD();
 //-----------------------------------------------------------------------------
 //SOLVEUR ###########################################
 //-----------------------------------------------------------------------------
-int rempli = 0;
+int rempli;
 
+int Solveur()
+{
+  rempli = 0;
+  for (temp1 = 0 ; temp1 < 9 ; temp1++)
+  {
+  for (temp2 = 0 ; temp2 < 9 ; temp2++)
+  {
+  chiffre[temp1][temp2].val[0] = 0;
+  for (temp3 = 1; temp3 <10; temp3++)
+  {
+  chiffre[temp1][temp2].val[temp3] = 1;
+  }}}
+  
+  for (temp1 = 0; temp1 < 9; temp1++)
+  {
+     for (temp2 = 0; temp2 < 9; temp2++)
+  {
+    if (grille [temp1][temp2] != 0)
+    {repli ++;
+    recalcprob(temp1,temp2);
+  }
+  }
+  
+  do
+  {
+    for (temp1 = 0; temp1 < 9; temp1++)
+  {
+     for (temp2 = 1; temp2 < 10; temp2++)
+  {
+    for (temp3 = 0; temp3 < 9; temp1++)
+  {
+    places = 0;
+    if (chiffre[temp1][temp3].val[temp2] == 1)
+    { places++;}
+  }
+  if (places == 1)
+  {
+    temp3 = 0;
+    while(chiffre[temp1][temp3].val[temp2] == 0)
+    {temp3++;}
+    grille[temp1][temp3] = temp2;
+    rempli++;
+    recalcprob(temp1, temp3);
+  }
+  
+  for (temp3 = 0; temp3 < 9; temp1++)
+  {
+    places = 0;
+    if (chiffre[temp3][temp1].val[temp2] == 1)
+    { places++;}
+  }
+  if (places == 1)
+  {
+    temp3 = 0;
+    while(chiffre[temp3][temp1].val[temp2] == 0)
+    {temp3++;}
+    grille[temp3][temp1] = temp2;
+    rempli++;
+    recalcprob(temp3, temp1);
+  }
+  
+  
+  
+  
+  }while (rempli < 81);
+    
+}
    
 
 
@@ -347,17 +414,17 @@ recalcprob (casex, casey);
 }}
 return 1;
 }
-
+int tempc1, tempc2;
 int recalcprobfeuille(casex, casey)
 {
 if (feuille[casex][casey] > 0)
 {
-for (temp1 =0; temp1 <9; temp1++)
+for (tempc1 =0; tempc1 <9; tempc1++)
 {
-temp2 = temp1 + 1;
-if(chiffre[casex][casey].val[temp2] != 0 ) { chiffre[casex][casey].val[temp2] = 0; combi[casex][casey]--; }
-if(chiffre[casex][temp1].val[feuille[casex][casey]] != 0 ) { chiffre[casex][temp1].val[feuille[casex][casey]] = 0; combi[casex][temp1]--; }
-if(chiffre[temp1][casey].val[feuille[casex][casey]] != 0 ) { chiffre[temp1][casey].val[feuille[casex][casey]] = 0; combi[temp1][casey]--; }
+tempc2 = tempc1 + 1;
+if(chiffre[casex][casey].val[tempc2] != 0 ) { chiffre[casex][casey].val[tempc2] = 0; combi[casex][casey]--; }
+if(chiffre[casex][tempc1].val[feuille[casex][casey]] != 0 ) { chiffre[casex][tempc1].val[feuille[casex][casey]] = 0; combi[casex][tempc1]--; }
+if(chiffre[tempc1][casey].val[feuille[casex][casey]] != 0 ) { chiffre[tempc1][casey].val[feuille[casex][casey]] = 0; combi[tempc1][casey]--; }
 }
 
 casex = casex / 3;
@@ -365,15 +432,15 @@ casex = 3 * casex;
 casey = casey / 3;
 casey = 3 * casey;
 
-for (temp1 = 0; temp1 < 3; temp1++)
+for (tempc1 = 0; tempc1 < 3; tempc1++)
 {
-for (temp2 = 0; temp2 < 3; temp2++)
+for (tempc2 = 0; tempc2 < 3; tempc2++)
 {
 
-if (chiffre[temp1 + casex][temp2 + casey].val[rnd] != 0 )
+if (chiffre[tempc1 + casex][tempc2 + casey].val[rnd] != 0 )
 {
-chiffre[temp1 + casex][temp2 + casey].val[rnd] = 0;
-combi[temp1 + casex][temp2 + casey]--;
+chiffre[tempc1 + casex][tempc2 + casey].val[rnd] = 0;
+combi[tempc1 + casex][tempc2 + casey]--;
 }}}
 }
 }
@@ -382,12 +449,12 @@ int recalcprob(casex, casey)
 {
 if (grille[casex][casey] > 0)
 {
-for (temp1 =0; temp1 <9; temp1++)
+for (tempc1 =0; tempc1 <9; tempc1++)
 {
-temp2 = temp1 + 1;
-if(chiffre[casex][casey].val[temp2] != 0 ) { chiffre[casex][casey].val[temp2] = 0; combi[casex][casey]--; }
-if(chiffre[casex][temp1].val[grille[casex][casey]] != 0 ) { chiffre[casex][temp1].val[grille[casex][casey]] = 0; combi[casex][temp1]--; }
-if(chiffre[temp1][casey].val[grille[casex][casey]] != 0 ) { chiffre[temp1][casey].val[grille[casex][casey]] = 0; combi[temp1][casey]--; }
+tempc2 = tempc1 + 1;
+if(chiffre[casex][casey].val[tempc2] != 0 ) { chiffre[casex][casey].val[tempc2] = 0; combi[casex][casey]--; }
+if(chiffre[casex][tempc1].val[grille[casex][casey]] != 0 ) { chiffre[casex][tempc1].val[grille[casex][casey]] = 0; combi[casex][tempc1]--; }
+if(chiffre[tempc1][casey].val[grille[casex][casey]] != 0 ) { chiffre[tempc1][casey].val[grille[casex][casey]] = 0; combi[tempc1][casey]--; }
 }
 
 casex = casex / 3;
@@ -395,15 +462,15 @@ casex = 3 * casex;
 casey = casey / 3;
 casey = 3 * casey;
 
-for (temp1 = 0; temp1 < 3; temp1++)
+for (tempc1 = 0; tempc1 < 3; tempc1++)
 {
-for (temp2 = 0; temp2 < 3; temp2++)
+for (tempc2 = 0; tempc2 < 3; tempc2++)
 {
 
-if (chiffre[temp1 + casex][temp2 + casey].val[rnd] != 0 )
+if (chiffre[tempc1 + casex][tempc2 + casey].val[rnd] != 0 )
 {
-chiffre[temp1 + casex][temp2 + casey].val[rnd] = 0;
-combi[temp1 + casex][temp2 + casey]--;
+chiffre[tempc1 + casex][tempc2 + casey].val[rnd] = 0;
+combi[tempc1 + casex][tempc2 + casey]--;
 }}}
 }
 }

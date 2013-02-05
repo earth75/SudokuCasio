@@ -94,20 +94,20 @@ controle();
 }
 else if (mode == 2)
 {
-  
+  do
+{
  EffacerMenu();
  InitData();
- 
- 
+ newTableau();
 
-PrintMini( 66, 44, "VERIFIER", MINI_OR); 
+PrintMini( 66, 44, "RESOUDRE", MINI_OR); 
 PrintMini( 66, 50, "NOUVEAU", MINI_OR);
 PrintMini( 66, 56, "MENU", MINI_OR); 
 Bdisp_AreaReverseVRAM(7*posx+1, 7*posy+1, 7*posx+6, 7*posy+6  );
  controle();
 
 
-}
+}while(gamefinished == 0);
 }while ( exit == 0);
 return 1;
 }
@@ -193,7 +193,7 @@ Bdisp_AreaReverseVRAM(7*posx+1, 7*posy+1, 7*posx+6, 7*posy+6  );
 }
 else
 {
- Bdisp_AreaReverseVRAM(64, 7*posy+1, 80, 7*posy+6  );
+ Bdisp_AreaReverseVRAM(64, 7*posy+1, 90, 7*posy+6  );
 }
 
 }
@@ -468,23 +468,13 @@ tempc2 = tempc1 + 1;
 if(chiffre[casex][casey].val[tempc2] != 0 ) { chiffre[casex][casey].val[tempc2] = 0; combi[casex][casey]--; }
 if(chiffre[casex][tempc1].val[grille[casex][casey]] != 0 ) { chiffre[casex][tempc1].val[grille[casex][casey]] = 0; combi[casex][tempc1]--; }
 if(chiffre[tempc1][casey].val[grille[casex][casey]] != 0 ) { chiffre[tempc1][casey].val[grille[casex][casey]] = 0; combi[tempc1][casey]--; }
+if (chiffre[tempc1 / 3 + 3 * (casex / 3)][tempc1 % 3 + 3 * (casex / 3)].val[rnd] != 0 )
+{
+chiffre[tempc1 / 3 + 3 * (casex / 3)][tempc1 % 3 + 3 * (casex / 3)].val[rnd] = 0;
+combi[tempc1 / 3 + 3 * (casex / 3)][tempc1 % 3 + 3 * (casex / 3)]--;
 }
 
-casex = casex / 3;
-casex = 3 * casex;
-casey = casey / 3;
-casey = 3 * casey;
-
-for (tempc1 = 0; tempc1 < 3; tempc1++)
-{
-for (tempc2 = 0; tempc2 < 3; tempc2++)
-{
-
-if (chiffre[tempc1 + casex][tempc2 + casey].val[rnd] != 0 )
-{
-chiffre[tempc1 + casex][tempc2 + casey].val[rnd] = 0;
-combi[tempc1 + casex][tempc2 + casey]--;
-}}}
+}
 }
 }
 

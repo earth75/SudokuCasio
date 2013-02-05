@@ -10,7 +10,7 @@ DISPBOX Menu;
 int temp1, temp2, temp3, temp4;
 long clkbuff1, clkbuff2, time, minutes, secondes, debut;
 unsigned char* mint, scd, nbr;
-int d, x, y, r, n,gamefinished, exit, restart, posx, posy, mode;
+int d, x, y, r, n, gamefinished, exit, restart, posx, posy, mode;
 int casex, casey, combin, rnd, rndx, rndy, result, aide, f, done, lvl;
 int key, trig;
 
@@ -36,7 +36,7 @@ GetKey(&key);
 if (key == KEY_CHAR_1)(mode = 1}
 else if (key == KEY_CHAR_2){mode = 2;}
 
-if (key == KEY_CHAR_1) 
+if (mode == 1) 
 {
 EffacerMenu();
 PrintMini( 65, 7, "GENERATON...", MINI_OR); 
@@ -91,13 +91,18 @@ controle();
 }while (gamefinished == 0);
 
 }
-else if (key == KEY_CHAR_2)
+else if (mode == 2)
 {
- 
- 
- 
- 
+ EffacerMenu();
+PrintMini( 65, 7, "TODO", MINI_OR); 
+PrintMini( 65, 25, "EXE TO RESTART", MINI_OR);
+PrintMini( 65, 19, "EXIT TO QUIT", MINI_OR);
 
+ while (key != KEY_CTRL_EXE && kay != KEY_CTRL_EXIT)
+{
+GetKey(&key);
+}
+if (key == KEY_CTRL_EXIT) {exit == 1;}
 }while ( exit == 0);
 return 1;
 }
@@ -300,13 +305,21 @@ rnd = rand() % 9 + 1;
 while (chiffre[casex][casey].val[rnd] == 0);
 
 grille[casex][casey] = rnd;
+recalcprob (casex, casey);
+}}
+return 1;
+}
 
+int recalcprob(casex, casey)
+{
+if (grille[casex][casey] > 0)
+{
 for (temp1 =0; temp1 <9; temp1++)
 {
 temp2 = temp1 + 1;
 if(chiffre[casex][casey].val[temp2] != 0 ) { chiffre[casex][casey].val[temp2] = 0; combi[casex][casey]--; }
-if(chiffre[casex][temp1].val[rnd] != 0 ) { chiffre[casex][temp1].val[rnd] = 0; combi[casex][temp1]--; }
-if(chiffre[temp1][casey].val[rnd] != 0 ) { chiffre[temp1][casey].val[rnd] = 0; combi[temp1][casey]--; }
+if(chiffre[casex][temp1].val[grille[casex][casey]] != 0 ) { chiffre[casex][temp1].val[grille[casex][casey]] = 0; combi[casex][temp1]--; }
+if(chiffre[temp1][casey].val[grille[casex][casey]] != 0 ) { chiffre[temp1][casey].val[grille[casex][casey]] = 0; combi[temp1][casey]--; }
 }
 
 casex = casex / 3;
@@ -324,8 +337,7 @@ if (chiffre[temp1 + casex][temp2 + casey].val[rnd] != 0 )
 chiffre[temp1 + casex][temp2 + casey].val[rnd] = 0;
 combi[temp1 + casex][temp2 + casey]--;
 }}}
-}}
-return 1;
+}
 }
 
 int Cacher(lvl) //############################################

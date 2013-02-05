@@ -1,4 +1,3 @@
-
 #include "fxlib.h"
 #include "sudoku.h"
 
@@ -11,7 +10,8 @@ DISPBOX Menu;
 int temp1, temp2, temp3, temp4;
 long clkbuff1, clkbuff2, time, minutes, secondes, debut;
 unsigned char* mint, scd, nbr;
-int d, x, y, r, n,gamefinished, exit, restart, posx, posy, casex, casey, combin, rnd, rndx, rndy, result, aide, f, done, lvl;
+int d, x, y, r, n,gamefinished, exit, restart, posx, posy, mode;
+int casex, casey, combin, rnd, rndx, rndy, result, aide, f, done, lvl;
 int key, trig;
 
 //----------------------------------------------------------------------------
@@ -29,11 +29,15 @@ newTableau();
 PrintMini( 78, 1, "~SUDOKU~", MINI_OR); 
 PrintMini( 65, 7, "1:JOUER", MINI_OR); 
 PrintMini( 65, 13, "2:SOLVEUR", MINI_OR); 
-while (key != KEY_CHAR_1)
+while (key != KEY_CHAR_1 && key != KEY_CHAR_2)
 {
 GetKey(&key);
 }
+if (key == KEY_CHAR_1)(mode = 1}
+else if (key == KEY_CHAR_2){mode = 2;}
 
+if (key == KEY_CHAR_1) 
+{
 EffacerMenu();
 PrintMini( 65, 7, "GENERATON...", MINI_OR); 
 Bdisp_PutDisp_DD();
@@ -41,8 +45,9 @@ SudoEngine();
 PrintMini( 65, 13, "TERMINE!", MINI_OR); 
 PrintMini( 65, 24, "DIFFICULTE :", MINI_OR);
 PrintMini( 65, 30, "1:FACILE", MINI_OR); 
-PrintMini( 65, 36, "2:MOYEN ", MINI_OR); 
-PrintMini( 65, 42, "3:DIFFICILE ", MINI_OR); 
+PrintMini( 65, 36, "2:MOYEN", MINI_OR); 
+PrintMini( 65, 42, "3:DIFFICILE", MINI_OR); 
+PrintMini( 65, 48, "4:CHUCK NORRIS", MINI_OR); 
 
 key = 0;
 while (key != KEY_CHAR_1 && key != KEY_CHAR_2 && key != KEY_CHAR_3)
@@ -84,6 +89,14 @@ controle();
 }while (restart == 0 );
 
 }while (gamefinished == 0);
+
+}
+else if (key == KEY_CHAR_2)
+{
+ 
+ 
+ 
+ 
 
 }while ( exit == 0);
 return 1;
@@ -407,7 +420,7 @@ int controle()  //#################################################
 temp1 = 0;
 while (temp1 == 0 )
 {
-if (IsKeyDown(KEY_CTRL_MENU)){GetKey(&key);} //pour retourner au menu j'ai pas trouvé mieux
+if (IsKeyDown(KEY_CTRL_MENU)){GetKey(&key);} //pour retourner au menu j'ai pas trouvï¿½ mieux
 Refreshclk();
 temp1 = Interrupt();
 }

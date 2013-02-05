@@ -232,7 +232,7 @@ int Solveur()
      for (temp2 = 0; temp2 < 9; temp2++)
   {
     if (grille [temp1][temp2] != 0)
-    {repli ++;
+    {rempli ++;
     recalcprob(temp1,temp2);
   }
   }
@@ -597,7 +597,16 @@ if (x = 9 && r == 1)
 {
  if (y = 6)
  {
-  restart = 1;
+   if (mode == 1)
+   {
+     //fin de partie();
+     restart = 1;
+   }
+   else if (mode ==2)
+   {
+     //solveur();
+     restart = 1:
+   }
  }
  if (y = 7)
  {

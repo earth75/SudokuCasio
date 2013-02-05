@@ -94,16 +94,20 @@ controle();
 }
 else if (mode == 2)
 {
+  
  EffacerMenu();
-PrintMini( 65, 7, "TODO", MINI_OR); 
-PrintMini( 65, 25, "EXE TO RESTART", MINI_OR);
-PrintMini( 65, 19, "EXIT TO QUIT", MINI_OR);
+ InitData();
+ 
+ 
 
- while (key != KEY_CTRL_EXE && kay != KEY_CTRL_EXIT)
-{
-GetKey(&key);
+PrintMini( 66, 44, "VERIFIER", MINI_OR); 
+PrintMini( 66, 50, "NOUVEAU", MINI_OR);
+PrintMini( 66, 56, "MENU", MINI_OR); 
+Bdisp_AreaReverseVRAM(7*posx+1, 7*posy+1, 7*posx+6, 7*posy+6  );
+ controle();
+
+
 }
-if (key == KEY_CTRL_EXIT) {exit == 1;}
 }while ( exit == 0);
 return 1;
 }
@@ -167,14 +171,31 @@ return 1;
 
 int curseur( int x, int y)//#####################################
 {
+if (posx < 9)
+{
 Bdisp_AreaReverseVRAM(7*posx+1, 7*posy+1, 7*posx+6, 7*posy+6  );
+}
+else
+{
+ Bdisp_AreaReverseVRAM(64, 7*posy+1, 80, 7*posy+6  );
+}
 posx = (posx + x);
-if (posx == -1) { posx = 8; }
-if (posx == 9) { posx = 0; }
+if (posx == -1) { posx = 9; }
+if (posx == 10) { posx = 0; }
 posy = (posy + y);
 if (posy == -1) { posy = 8; }
 if (posy == 9) { posy = 0; }
+
+if (posx == 9 && posy < 6) { posy = 6; }
+if (posx < 9)
+{
 Bdisp_AreaReverseVRAM(7*posx+1, 7*posy+1, 7*posx+6, 7*posy+6  );
+}
+else
+{
+ Bdisp_AreaReverseVRAM(64, 7*posy+1, 80, 7*posy+6  );
+}
+
 }
 
 int EffacerMenu() //########################################
@@ -183,6 +204,22 @@ Bdisp_AreaClr_VRAM(&Menu);
 
 Bdisp_PutDisp_DD();
 }
+
+
+
+
+
+//-----------------------------------------------------------------------------
+//SOLVEUR ###########################################
+//-----------------------------------------------------------------------------
+int rempli = 0;
+
+   
+
+
+
+
+
 
 
 
@@ -486,9 +523,30 @@ Refreshclk();
 temp1 = Interrupt();
 }
 
+if (x = 9 && r == 1)
+{
+ if (y = 6)
+ {
+  restart = 1;
+ }
+ if (y = 7)
+ {
+  restart = 1;
+  gamefinished = 1;
+ }
+ if (y = 8)
+ {
+  restart = 1;
+  gamefinished = 1;
+  exit = 1;
+ }
+}
+ 
 if ( x != 0 || y != 0)
 {
 curseur( x, y);
+}
+
 if (aide == 1) {Aide();}
 
 Bdisp_PutDisp_DD();
@@ -547,7 +605,8 @@ if (IsKeyDown(KEY_CHAR_7) != 0){n = 7*IsKeyDown(KEY_CHAR_7);}
 if (IsKeyDown(KEY_CHAR_8) != 0){n = 8*IsKeyDown(KEY_CHAR_8);}
 if (IsKeyDown(KEY_CHAR_9) != 0){n = 9*IsKeyDown(KEY_CHAR_9);}
 if (IsKeyDown(KEY_CHAR_0) != 0){n = 10*IsKeyDown(KEY_CHAR_0);}
-if (x == 0 && y == 0 && n == 0) { return 0; }
+if (IsKeyDown(KEY_CTRL_EXE) != 0){r = IsKeyDown(KEY_CTRL_EXE);}
+if (x == 0 && y == 0 && n == 0 && r == 0) { return 0; }
 else { return 1; }
 
 }

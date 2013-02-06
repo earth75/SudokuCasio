@@ -455,9 +455,9 @@ for (tempc1 = 0; tempc1 < 3; tempc1++)
 for (tempc2 = 0; tempc2 < 3; tempc2++)
 {
 
-if (chiffre[tempc1 + casex][tempc2 + casey].val[rnd] != 0 )
+if (chiffre[tempc1 + casex][tempc2 + casey].val[feuille[casex][casey]] != 0 )
 {
-chiffre[tempc1 + casex][tempc2 + casey].val[rnd] = 0;
+chiffre[tempc1 + casex][tempc2 + casey].val[feuille[casex][casey]] = 0;
 combi[tempc1 + casex][tempc2 + casey]--;
 }}}
 }
@@ -471,8 +471,8 @@ for (tempc1 =0; tempc1 <9; tempc1++)
 {
 tempc2 = tempc1 + 1;
 if(chiffre[casex][casey].val[tempc2] != 0 ) { chiffre[casex][casey].val[tempc2] = 0; combi[casex][casey]--; }
-if(chiffre[casex][tempc1].val[feuille[casex][casey]] != 0 ) { chiffre[casex][tempc1].val[feuille[casex][casey]] = 0; combi[casex][tempc1]--; }
-if(chiffre[tempc1][casey].val[feuille[casex][casey]] != 0 ) { chiffre[tempc1][casey].val[feuille[casex][casey]] = 0; combi[tempc1][casey]--; }
+if(chiffre[casex][tempc1].val[grille[casex][casey]] != 0 ) { chiffre[casex][tempc1].val[grille[casex][casey]] = 0; combi[casex][tempc1]--; }
+if(chiffre[tempc1][casey].val[grille[casex][casey]] != 0 ) { chiffre[tempc1][casey].val[grille[casex][casey]] = 0; combi[tempc1][casey]--; }
 }
 
 casex = casex / 3;
@@ -485,9 +485,9 @@ for (tempc1 = 0; tempc1 < 3; tempc1++)
 for (tempc2 = 0; tempc2 < 3; tempc2++)
 {
 
-if (chiffre[tempc1 + casex][tempc2 + casey].val[rnd] != 0 )
+if (chiffre[tempc1 + casex][tempc2 + casey].val[grille[casex][casey]] != 0 )
 {
-chiffre[tempc1 + casex][tempc2 + casey].val[rnd] = 0;
+chiffre[tempc1 + casex][tempc2 + casey].val[grille[casex][casey]] = 0;
 combi[tempc1 + casex][tempc2 + casey]--;
 }}}
 }

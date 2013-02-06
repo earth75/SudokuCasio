@@ -12,7 +12,9 @@ long clkbuff1, clkbuff2, time, minutes, secondes, debut;
 unsigned char* mint, scd, nbr;
 int d, x, y, r, n, gamefinished, exit, restart, posx, posy, mode;
 int casex, casey, combin, rnd, rndx, rndy, result, aide, f, done, lvl;
-int key, trig;
+int key, trig, carrex, carrey;
+int grille[9][9], cache[9][9], combi[9][9], feuille[9][9];
+Possib chiffre[9][9];
 
 //----------------------------------------------------------------------------
 //MAIN  #################################################
@@ -33,13 +35,13 @@ while (key != KEY_CHAR_1 && key != KEY_CHAR_2)
 {
 GetKey(&key);
 }
-if (key == KEY_CHAR_1)(mode = 1}
+if (key == KEY_CHAR_1){mode = 1;}
 else if (key == KEY_CHAR_2){mode = 2;}
 
 if (mode == 1) 
 {
 EffacerMenu();
-PrintMini( 65, 7, "GENERATON...", MINI_OR); 
+PrintMini( 65, 7, "GENERATION...", MINI_OR); 
 Bdisp_PutDisp_DD();
 SudoEngine();
 PrintMini( 65, 13, "TERMINE!", MINI_OR); 
@@ -50,11 +52,12 @@ PrintMini( 65, 42, "3:DIFFICILE", MINI_OR);
 PrintMini( 65, 48, "4:CHUCK NORRIS", MINI_OR); 
 
 key = 0;
-while (key != KEY_CHAR_1 && key != KEY_CHAR_2 && key != KEY_CHAR_3)
+while (key != KEY_CHAR_0 && key != KEY_CHAR_1 && key != KEY_CHAR_2 && key != KEY_CHAR_3)
 {
 GetKey(&key);
 }
-if (key == KEY_CHAR_1) { lvl=1; }
+if (key == KEY_CHAR_0) { lvl=0; }
+else if (key == KEY_CHAR_1) { lvl=1;}
 else if (key == KEY_CHAR_2) {lvl=2;}
 else if (key == KEY_CHAR_3) {lvl=3;}
 Cacher(lvl);
@@ -76,22 +79,22 @@ Bdisp_DrawLineVRAM(123, 15, 123, 31);
 Aide();
 PrintMini( 70, 17, "#", MINI_OVER); 
 PrintMini( 66, 44, "VERIFIER", MINI_OR); 
-PrintMini( 66, 50, "NOUVEAU", MINI_OR);
-PrintMini( 66, 56, "MENU", MINI_OR); 
+PrintMini( 66, 51, "NOUVEAU", MINI_OR);
+PrintMini( 66, 58, "MENU", MINI_OR); 
 Bdisp_AreaReverseVRAM(7*posx+1, 7*posy+1, 7*posx+6, 7*posy+6  );
 InitClk();
 Bdisp_PutDisp_DD();
 
 restart = 0;
-}}
+aide = 1;
 do
 {
 controle(); 
 }while (restart == 0 );
 
 }while (gamefinished == 0);
-
 }
+
 else if (mode == 2)
 {
   do
@@ -101,13 +104,17 @@ else if (mode == 2)
  newTableau();
 
 PrintMini( 66, 44, "RESOUDRE", MINI_OR); 
-PrintMini( 66, 50, "NOUVEAU", MINI_OR);
-PrintMini( 66, 56, "MENU", MINI_OR); 
+PrintMini( 66, 51, "NOUVEAU", MINI_OR);
+PrintMini( 66, 58, "MENU", MINI_OR); 
 Bdisp_AreaReverseVRAM(7*posx+1, 7*posy+1, 7*posx+6, 7*posy+6  );
- controle();
 
+do
+{
+controle(); 
+}while (restart == 0 );
 
 }while(gamefinished == 0);
+}
 }while ( exit == 0);
 return 1;
 }
@@ -177,14 +184,14 @@ Bdisp_AreaReverseVRAM(7*posx+1, 7*posy+1, 7*posx+6, 7*posy+6  );
 }
 else
 {
- Bdisp_AreaReverseVRAM(64, 7*posy+1, 80, 7*posy+6  );
+ Bdisp_AreaReverseVRAM(64, 7*posy+1, 100, 7*posy+6  );
 }
 posx = (posx + x);
-if (posx == -1) { posx = 9; }
-if (posx == 10) { posx = 0; }
+if (posx < 0) { posx = 9; }
+if (posx > 9) { posx = 0; }
 posy = (posy + y);
-if (posy == -1) { posy = 8; }
-if (posy == 9) { posy = 0; }
+if (posy <0) { posy = 8; }
+if (posy >8) { posy = 0; }
 
 if (posx == 9 && posy < 6) { posy = 6; }
 if (posx < 9)
@@ -193,9 +200,10 @@ Bdisp_AreaReverseVRAM(7*posx+1, 7*posy+1, 7*posx+6, 7*posy+6  );
 }
 else
 {
- Bdisp_AreaReverseVRAM(64, 7*posy+1, 90, 7*posy+6  );
+ Bdisp_AreaReverseVRAM(64, 7*posy+1, 100, 7*posy+6  );
 }
 
+Sleep(150);
 }
 
 int EffacerMenu() //########################################
@@ -212,7 +220,7 @@ Bdisp_PutDisp_DD();
 //-----------------------------------------------------------------------------
 //SOLVEUR ###########################################
 //-----------------------------------------------------------------------------
-int rempli;
+int rempli, places;
 
 int Solveur()
 {
@@ -232,10 +240,10 @@ int Solveur()
      for (temp2 = 0; temp2 < 9; temp2++)
   {
     if (grille [temp1][temp2] != 0)
-    {rempli ++;
+    {
+  rempli ++;
     recalcprob(temp1,temp2);
-  }
-  }
+  } }}
   
   do // boucle de résolution
   {
@@ -243,6 +251,8 @@ int Solveur()
   {
      for (temp2 = 1; temp2 < 10; temp2++)
   {
+  
+  
     for (temp3 = 0; temp3 < 9; temp1++) //lignes
   {
     places = 0;
@@ -291,17 +301,10 @@ int Solveur()
     recalcprob((temp3 % 3 + temp1 % 3), (temp3 / 3 + temp1 / 3));
   }
   
+  }}
   }while (rempli < 81);
-    
-}
-   
-
-
-
-
-
-
-
+  
+  } 
 
 
 //-----------------------------------------------------------------------------
@@ -355,8 +358,7 @@ Bdisp_PutDisp_DD();
 //GAME ENGINE  ###########################################
 //-----------------------------------------------------------------------------
 
-int grille[9][9], cache[9][9], combi[9][9], feuille[9][9];
-Possib chiffre[9][9];
+
 
 
 int SudoEngine()  //###########################################
@@ -427,7 +429,10 @@ recalcprob (casex, casey);
 }}
 return 1;
 }
+
+
 int tempc1, tempc2;
+
 int recalcprobfeuille(casex, casey)
 {
 if (feuille[casex][casey] > 0)
@@ -450,9 +455,9 @@ for (tempc1 = 0; tempc1 < 3; tempc1++)
 for (tempc2 = 0; tempc2 < 3; tempc2++)
 {
 
-if (chiffre[tempc1 + casex][tempc2 + casey].val[rnd] != 0 )
+if (chiffre[tempc1 + casex][tempc2 + casey].val[feuille[casex][casey]] != 0 )
 {
-chiffre[tempc1 + casex][tempc2 + casey].val[rnd] = 0;
+chiffre[tempc1 + casex][tempc2 + casey].val[feuille[casex][casey]] = 0;
 combi[tempc1 + casex][tempc2 + casey]--;
 }}}
 }
@@ -468,19 +473,30 @@ tempc2 = tempc1 + 1;
 if(chiffre[casex][casey].val[tempc2] != 0 ) { chiffre[casex][casey].val[tempc2] = 0; combi[casex][casey]--; }
 if(chiffre[casex][tempc1].val[grille[casex][casey]] != 0 ) { chiffre[casex][tempc1].val[grille[casex][casey]] = 0; combi[casex][tempc1]--; }
 if(chiffre[tempc1][casey].val[grille[casex][casey]] != 0 ) { chiffre[tempc1][casey].val[grille[casex][casey]] = 0; combi[tempc1][casey]--; }
-if (chiffre[tempc1 / 3 + 3 * (casex / 3)][tempc1 % 3 + 3 * (casex / 3)].val[rnd] != 0 )
-{
-chiffre[tempc1 / 3 + 3 * (casex / 3)][tempc1 % 3 + 3 * (casex / 3)].val[rnd] = 0;
-combi[tempc1 / 3 + 3 * (casex / 3)][tempc1 % 3 + 3 * (casex / 3)]--;
 }
 
-}
+casex = casex / 3;
+casex = 3 * casex;
+casey = casey / 3;
+casey = 3 * casey;
+
+for (tempc1 = 0; tempc1 < 3; tempc1++)
+{
+for (tempc2 = 0; tempc2 < 3; tempc2++)
+{
+
+if (chiffre[tempc1 + casex][tempc2 + casey].val[grille[casex][casey]] != 0 )
+{
+chiffre[tempc1 + casex][tempc2 + casey].val[grille[casex][casey]] = 0;
+combi[tempc1 + casex][tempc2 + casey]--;
+}}}
 }
 }
 
 int Cacher(lvl) //############################################
 {
-
+if (lvl != 0)
+{
 for (temp1 = 0; temp1 < (15*lvl+15); temp1++)
 {
 
@@ -488,11 +504,10 @@ do
 {
 rndx = rand() % 9 ;
 rndy = rand() % 9;
-}
-while (cache[rndx][rndy] == 0);
+}while (cache[rndx][rndy] == 0);
 
 cache[rndx][rndy] = 0;
-
+}
 }
 }
 int InitData() //##############################################
@@ -523,12 +538,12 @@ return 1;
 
 int DebutPartie() //##############################
 {
-
 for (temp1 = 0; temp1 < 9; temp1++)
 {
 for (temp2 = 0; temp2 < 9; temp2++)
 {
 feuille[temp1][temp2] = cache[temp1][temp2] * grille[temp1][temp2];
+
 if(feuille[temp1][temp2] != 0)
 {
 intToStrCase(&nbr, feuille[temp1][temp2]);
@@ -544,7 +559,7 @@ for (temp2 = 0 ; temp2 < 9 ; temp2++)
 chiffre[temp1][temp2].val[0] = 0;
 for (temp3 = 1; temp3 <10; temp3++)
 {
-chiffre[temp1][temp2].val[temp3] = 1;
+chiffre[temp1][temp2].val[temp3] = temp3;
 }}}
 
 for (temp1 = 0; temp1 < 9; temp1++)
@@ -579,6 +594,7 @@ intToStrCase(&nbr, chiffre[posx][posy].val[8]);
 PrintMini(85, 25, &nbr, MINI_OVER);
 intToStrCase(&nbr, chiffre[posx][posy].val[9]);
 PrintMini(93, 25, &nbr, MINI_OVER);
+Bdisp_PutDisp_DD();
 
 }
 
@@ -588,14 +604,14 @@ int controle()  //#################################################
 temp1 = 0;
 while (temp1 == 0 )
 {
-if (IsKeyDown(KEY_CTRL_MENU)){GetKey(&key);} //pour retourner au menu j'ai pas trouv� mieux
+if (IsKeyDown(KEY_CTRL_MENU)){GetKey(&key);} //pour retourner au menu j'ai pas trouv? mieux
 Refreshclk();
 temp1 = Interrupt();
 }
 
-if (x = 9 && r == 1)
+if (x == 9 && r == 1)
 {
- if (y = 6)
+ if (y == 6)
  {
    if (mode == 1)
    {
@@ -605,15 +621,15 @@ if (x = 9 && r == 1)
    else if (mode ==2)
    {
      //solveur();
-     restart = 1:
+     restart = 1;
    }
  }
- if (y = 7)
+ if (y == 7)
  {
   restart = 1;
   gamefinished = 1;
  }
- if (y = 8)
+ if (y == 8)
  {
   restart = 1;
   gamefinished = 1;
@@ -624,18 +640,16 @@ if (x = 9 && r == 1)
 if ( x != 0 || y != 0)
 {
 curseur( x, y);
+
 }
 
-if (aide == 1) {Aide();}
-
-Bdisp_PutDisp_DD();
-Sleep(150);
-}
+if (aide == 1 &&  posx<9) {Aide();}
 
 
 if ( n>0 && n<10 && cache[posx][posy] == 0)
 {
 feuille[posx][posy] = n;
+recalcprobfeuille(posx, posy);
 intToStrCase(&nbr, feuille[posx][posy]);
 Bdisp_AreaReverseVRAM( 7*posx+1, 7*posy+1, 7*posx+6, 7*posy+6  );
 for (temp1 = 0; temp1 <5; temp1++)
@@ -685,9 +699,9 @@ if (IsKeyDown(KEY_CHAR_8) != 0){n = 8*IsKeyDown(KEY_CHAR_8);}
 if (IsKeyDown(KEY_CHAR_9) != 0){n = 9*IsKeyDown(KEY_CHAR_9);}
 if (IsKeyDown(KEY_CHAR_0) != 0){n = 10*IsKeyDown(KEY_CHAR_0);}
 if (IsKeyDown(KEY_CTRL_EXE) != 0){r = IsKeyDown(KEY_CTRL_EXE);}
+
 if (x == 0 && y == 0 && n == 0 && r == 0) { return 0; }
 else { return 1; }
-
 }
 
 unsigned char* intToStrCase(unsigned char* c, int n) //##################
@@ -740,4 +754,3 @@ int InitializeSystem(int isAppli, unsigned short OptionNum)
 }
 
 #pragma section
-

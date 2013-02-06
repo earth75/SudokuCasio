@@ -40,7 +40,7 @@ else if (key == KEY_CHAR_2){mode = 2;}
 
 if (mode == 1) 
 {
-EffacerMenu();
+Bdisp_AreaClr_VRAM(&Menu);
 PrintMini( 65, 7, "GENERATION...", MINI_OR); 
 Bdisp_PutDisp_DD();
 SudoEngine();
@@ -67,7 +67,7 @@ do
 {
 newTableau();
 DebutPartie();
-EffacerMenu();
+Bdisp_AreaClr_VRAM(&Menu);
 Bdisp_DrawLineVRAM(66, 13, 125, 13);
 Bdisp_DrawLineVRAM(66, 13 , 66, 33);
 Bdisp_DrawLineVRAM(66, 33, 125, 33);
@@ -76,13 +76,13 @@ Bdisp_DrawLineVRAM(68, 15, 123, 15);
 Bdisp_DrawLineVRAM(68, 15, 68, 31);
 Bdisp_DrawLineVRAM(68, 31, 123, 31);
 Bdisp_DrawLineVRAM(123, 15, 123, 31);
-Aide();
 PrintMini( 70, 17, "#", MINI_OVER); 
 PrintMini( 66, 44, "VERIFIER", MINI_OR); 
 PrintMini( 66, 51, "NOUVEAU", MINI_OR);
 PrintMini( 66, 58, "MENU", MINI_OR); 
-Bdisp_AreaReverseVRAM(7*posx+1, 7*posy+1, 7*posx+6, 7*posy+6  );
 InitClk();
+if (posx < 9) { Bdisp_AreaReverseVRAM(7*posx+1, 7*posy+1, 7*posx+6, 7*posy+6  );  Aide();}
+else { Bdisp_AreaReverseVRAM(64, 7*posy+1, 100, 7*posy+6  );}
 Bdisp_PutDisp_DD();
 
 restart = 0;
@@ -99,15 +99,16 @@ else if (mode == 2)
 {
   do
 {
- EffacerMenu();
+Bdisp_AreaClr_VRAM(&Menu);
  InitData();
  newTableau();
 
 PrintMini( 66, 44, "RESOUDRE", MINI_OR); 
 PrintMini( 66, 51, "NOUVEAU", MINI_OR);
 PrintMini( 66, 58, "MENU", MINI_OR); 
-Bdisp_AreaReverseVRAM(7*posx+1, 7*posy+1, 7*posx+6, 7*posy+6  );
-
+if (posx < 9) { Bdisp_AreaReverseVRAM(7*posx+1, 7*posy+1, 7*posx+6, 7*posy+6  );}
+else { Bdisp_AreaReverseVRAM(64, 7*posy+1, 100, 7*posy+6  );}
+Bdisp_PutDisp_DD();
 do
 {
 controle(); 
@@ -116,7 +117,10 @@ controle();
 }while(gamefinished == 0);
 }
 }while ( exit == 0);
-return 1;
+exit = 0;
+restart = 0;
+gamefinished = 0;
+return 0;
 }
 
 
@@ -186,14 +190,17 @@ else
 {
  Bdisp_AreaReverseVRAM(64, 7*posy+1, 100, 7*posy+6  );
 }
-posx = (posx + x);
-if (posx < 0) { posx = 9; }
-if (posx > 9) { posx = 0; }
+
 posy = (posy + y);
 if (posy <0) { posy = 8; }
 if (posy >8) { posy = 0; }
 
-if (posx == 9 && posy < 6) { posy = 6; }
+posx = (posx + x);
+if (posx < 0 && posy < 6) { posx = 8; }
+else if (posx < 0 && posy > 5) { posx = 9; }
+if (posx > 8 && posy <6) { posx = 0; }
+else if (posx >9) {posx = 0; }
+
 if (posx < 9)
 {
 Bdisp_AreaReverseVRAM(7*posx+1, 7*posy+1, 7*posx+6, 7*posy+6  );
@@ -225,6 +232,8 @@ int rempli, places;
 int Solveur()
 {
   rempli = 0;
+PrintMini( 86, 7, "00/81", MINI_OR); 
+Bdisp_PutDisp_DD();
   for (temp1 = 0 ; temp1 < 9 ; temp1++)
   {
   for (temp2 = 0 ; temp2 < 9 ; temp2++)
@@ -239,21 +248,28 @@ int Solveur()
   {
      for (temp2 = 0; temp2 < 9; temp2++)
   {
-    if (grille [temp1][temp2] != 0)
+    if (feuille [temp1][temp2] != 0)
     {
   rempli ++;
-    recalcprob(temp1,temp2);
+    recalcprobfeuille(temp1,temp2);
   } }}
-  
+
+intToStrClk(&nbr, rempli);
+PrintMini( 86, 7, &mint , MINI_OVER);
+ Bdisp_PutDisp_DD();
+
+
   do // boucle de résolution
   {
+
+
     for (temp1 = 0; temp1 < 9; temp1++)
   {
      for (temp2 = 1; temp2 < 10; temp2++)
   {
   
   
-    for (temp3 = 0; temp3 < 9; temp1++) //lignes
+    for (temp3 = 0; temp3 < 9; temp3++) //lignes
   {
     places = 0;
     if (chiffre[temp1][temp3].val[temp2] == 1)
@@ -264,12 +280,15 @@ int Solveur()
     temp3 = 0;
     while(chiffre[temp1][temp3].val[temp2] == 0)
     {temp3++;}
-    grille[temp1][temp3] = temp2;
+    feuille[temp1][temp3] = temp2;
     rempli++;
     recalcprob(temp1, temp3);
+    intToStrCase(&nbr, feuille[temp1][temp3]);
+PrintMini(7*temp1+2, 7*temp3+2, &nbr, MINI_OR);
+Bdisp_PutDisp_DD();
   }
   
-  for (temp3 = 0; temp3 < 9; temp1++) // colonnes
+  for (temp3 = 0; temp3 < 9; temp3++) // colonnes
   {
     places = 0;
     if (chiffre[temp3][temp1].val[temp2] == 1)
@@ -280,29 +299,38 @@ int Solveur()
     temp3 = 0;
     while(chiffre[temp3][temp1].val[temp2] == 0)
     {temp3++;}
-    grille[temp3][temp1] = temp2;
+    feuille[temp3][temp1] = temp2;
     rempli++;
-    recalcprob(temp3, temp1);
+    recalcprobfeuille(temp3, temp1);
+intToStrCase(&nbr, feuille[temp3][temp1]);
+PrintMini(7*temp3+2, 7*temp1+2, &nbr, MINI_OR);
+Bdisp_PutDisp_DD();
   }
   
-  for (temp3 = 0; temp3 < 9; temp1++) // carrés
+  for (temp3 = 0; temp3 < 9; temp3++) // carrÃ©s
   {
     places = 0;
-    if (chiffre[temp3 % 3 + temp1 % 3][temp3 / 3 + temp1 / 3].val[temp2] == 1)
+    if (chiffre[(temp3 - temp3 / 3) + (temp1 - temp1 / 3)][temp3 / 3 + temp1 / 3].val[temp2] == 1)
     { places++;}
   }
   if (places == 1)
   {
     temp3 = 0;
-    while(chiffre[temp3 % 3 + temp1 % 3][temp3 / 3 + temp1 / 3].val[temp2] == 0)
+    while(chiffre[(temp3 - temp3 / 3) + (temp1 - temp1 / 3)][temp3 / 3 + temp1 / 3].val[temp2] == 0)
     {temp3++;}
-    grille[temp3 % 3 + temp1 % 3][temp3 / 3 + temp1 / 3] = temp2;
+    grille[(temp3 - temp3 / 3) + (temp1 - temp1 / 3)][temp3 / 3 + temp1 / 3] = temp2;
     rempli++;
-    recalcprob((temp3 % 3 + temp1 % 3), (temp3 / 3 + temp1 / 3));
+    recalcprobfeuille(((temp3 - temp3 / 3) + (temp1 - temp1 / 3)), (temp3 / 3 + temp1 / 3));
+    intToStrCase(&nbr, feuille[(temp3 - temp3 / 3) + (temp1 - temp1 / 3)][temp3 / 3 + temp1 / 3]);
+PrintMini(7*((temp3 - temp3 / 3) + (temp1 - temp1 / 3)), 7*(temp3 / 3 + temp1 / 3)+2, &nbr, MINI_OR);
+Bdisp_PutDisp_DD();
   }
   
   }}
-  }while (rempli < 81);
+intToStrClk(&nbr, rempli);
+PrintMini( 86, 7, &nbr , MINI_OVER);
+ Bdisp_PutDisp_DD();
+  }while (Verificationf() == 0);
   
   } 
 
@@ -392,6 +420,23 @@ return f;
 }
 
 
+int Verificationf() //##########################################
+{
+f = 1;
+for (temp1 = 0 ; temp1 < 9 ; temp1++)
+{
+for (temp2 = 0 ; temp2 < 9 ; temp2++)
+{
+if (feuille[temp1][temp2] == 0) 
+{
+f = 0;
+}
+}
+}
+
+return f;
+}
+
 
 int Generation()  //###########################################
 {
@@ -433,7 +478,7 @@ return 1;
 
 int tempc1, tempc2;
 
-int recalcprobfeuille(casex, casey)
+int recalcprobfeuille(casex, casey) //###################################
 {
 if (feuille[casex][casey] > 0)
 {
@@ -459,11 +504,12 @@ if (chiffre[tempc1 + casex][tempc2 + casey].val[feuille[casex][casey]] != 0 )
 {
 chiffre[tempc1 + casex][tempc2 + casey].val[feuille[casex][casey]] = 0;
 combi[tempc1 + casex][tempc2 + casey]--;
-}}}
+}
+}}
 }
 }
 
-int recalcprob(casex, casey)
+int recalcprob(casex, casey) //#########################################"
 {
 if (grille[casex][casey] > 0)
 {
@@ -594,10 +640,9 @@ intToStrCase(&nbr, chiffre[posx][posy].val[8]);
 PrintMini(85, 25, &nbr, MINI_OVER);
 intToStrCase(&nbr, chiffre[posx][posy].val[9]);
 PrintMini(93, 25, &nbr, MINI_OVER);
-Bdisp_PutDisp_DD();
-
 }
 
+int finpartie() {return 0;}
 
 int controle()  //#################################################
 {
@@ -605,31 +650,44 @@ temp1 = 0;
 while (temp1 == 0 )
 {
 if (IsKeyDown(KEY_CTRL_MENU)){GetKey(&key);} //pour retourner au menu j'ai pas trouv? mieux
-Refreshclk();
+if (mode == 1) {Refreshclk();}
 temp1 = Interrupt();
 }
 
-if (x == 9 && r == 1)
+if (posx == 9 && r == 1)
 {
- if (y == 6)
+ if (posy == 6)
  {
    if (mode == 1)
    {
-     //fin de partie();
+     if (finpartie() == 0)
+     {
+      Bdisp_AreaClr_VRAM(&Menu);
+      PrintMini( 65, 36, "FAUX!", MINI_OR); 
+Sleep (150);
+      PrintMini( 66, 51, "EXE POUR", MINI_OR);
+      PrintMini( 66, 58, "RECOMMENCER", MINI_OR); 
+     Bdisp_PutDisp_DD();
+      while (key != KEY_CTRL_EXE) { GetKey(&key); }
+     }
      restart = 1;
    }
    else if (mode ==2)
    {
-     //solveur();
+     Solveur();
+     PrintMini( 66, 51, "EXE POUR", MINI_OR);
+      PrintMini( 66, 58, "RECOMMENCER", MINI_OR); 
+     Bdisp_PutDisp_DD();
+      while (key != KEY_CTRL_EXE) { GetKey(&key); }
      restart = 1;
    }
  }
- if (y == 7)
+ if (posy == 7)
  {
   restart = 1;
   gamefinished = 1;
  }
- if (y == 8)
+ if (posy == 8)
  {
   restart = 1;
   gamefinished = 1;
@@ -646,7 +704,7 @@ curseur( x, y);
 if (aide == 1 &&  posx<9) {Aide();}
 
 
-if ( n>0 && n<10 && cache[posx][posy] == 0)
+if ( n>0 && n<10  && posx < 9 && ( (cache[posx][posy] == 0 && mode == 1) || mode == 2 ) )
 {
 feuille[posx][posy] = n;
 recalcprobfeuille(posx, posy);
@@ -660,7 +718,6 @@ Bdisp_SetPoint_VRAM( 7*posx+4, 7*posy+2+temp1, 0);
 }
 PrintMini( 7*posx+2, 7*posy+2, &nbr, MINI_OR);
 Bdisp_AreaReverseVRAM( 7*posx+1, 7*posy+1, 7*posx+6, 7*posy+6  );
-Bdisp_PutDisp_DD();
 }
 
 if ( n == 10 && cache[posx][posy] == 0)
@@ -672,9 +729,8 @@ Bdisp_SetPoint_VRAM( 7*posx+2, 7*posy+2+temp1, 1);
 Bdisp_SetPoint_VRAM( 7*posx+3, 7*posy+2+temp1, 1);
 Bdisp_SetPoint_VRAM( 7*posx+4, 7*posy+2+temp1, 1);
 }
-Bdisp_PutDisp_DD();
 }
-
+Bdisp_PutDisp_DD();
 return 1;
 }
 

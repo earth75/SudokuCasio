@@ -11,7 +11,7 @@ int temp1, temp2, temp3, temp4;
 long clkbuff1, clkbuff2, time, minutes, secondes, debut;
 unsigned char* mint, scd, nbr;
 int d, x, y, r, n, gamefinished, exit, restart, posx, posy, mode;
-int casex, casey, combin, rnd, rndx, rndy, result, aide, f, done, lvl;
+int casex, casey, carrex, carrey, combin, rnd, rndx, rndy, result, aide, f, done, lvl;
 int key, trig, carrex, carrey;
 int grille[9][9], cache[9][9], combi[9][9], feuille[9][9];
 Possib chiffre[9][9];
@@ -259,7 +259,7 @@ PrintMini( 86, 7, &mint , MINI_OVER);
  Bdisp_PutDisp_DD();
 
 
-  do // boucle de r�solution
+  do // boucle de résolution
   {
 
 
@@ -307,7 +307,7 @@ PrintMini(7*temp3+2, 7*temp1+2, &nbr, MINI_OR);
 Bdisp_PutDisp_DD();
   }
   
-  for (temp3 = 0; temp3 < 9; temp3++) // carrés
+  for (temp3 = 0; temp3 < 9; temp3++) // carrÃ©s
   {
     places = 0;
     if (chiffre[(temp3 - temp3 / 3) + (temp1 - temp1 / 3)][temp3 / 3 + temp1 / 3].val[temp2] == 1)
@@ -330,7 +330,7 @@ Bdisp_PutDisp_DD();
 intToStrClk(&nbr, rempli);
 PrintMini( 86, 7, &nbr , MINI_OVER);
  Bdisp_PutDisp_DD();
-  }while (rempli < 81);
+  }while (Verificationf() == 0);
   
   } 
 
@@ -420,6 +420,23 @@ return f;
 }
 
 
+int Verificationf() //##########################################
+{
+f = 1;
+for (temp1 = 0 ; temp1 < 9 ; temp1++)
+{
+for (temp2 = 0 ; temp2 < 9 ; temp2++)
+{
+if (feuille[temp1][temp2] == 0) 
+{
+f = 0;
+}
+}
+}
+
+return f;
+}
+
 
 int Generation()  //###########################################
 {
@@ -473,20 +490,18 @@ if(chiffre[casex][tempc1].val[feuille[casex][casey]] != 0 ) { chiffre[casex][tem
 if(chiffre[tempc1][casey].val[feuille[casex][casey]] != 0 ) { chiffre[tempc1][casey].val[feuille[casex][casey]] = 0; combi[tempc1][casey]--; }
 }
 
-casex = casex / 3;
-casex = 3 * casex;
-casey = casey / 3;
-casey = 3 * casey;
+carrex = 3 * (casex / 3);
+carrey = 3 * (casey / 3);
 
 for (tempc1 = 0; tempc1 < 3; tempc1++)
 {
 for (tempc2 = 0; tempc2 < 3; tempc2++)
 {
 
-if (chiffre[tempc1 + casex][tempc2 + casey].val[feuille[casex][casey]] != 0 )
+if (chiffre[tempc1 + carrex][tempc2 + carrey].val[feuille[casex][casey]] != 0 )
 {
-chiffre[tempc1 + casex][tempc2 + casey].val[feuille[casex][casey]] = 0;
-combi[tempc1 + casex][tempc2 + casey]--;
+chiffre[tempc1 + carrex][tempc2 + carrey].val[feuille[casex][casey]] = 0;
+combi[tempc1 + carrex][tempc2 + carrey]--;
 }
 }}
 }
@@ -504,21 +519,20 @@ if(chiffre[casex][tempc1].val[grille[casex][casey]] != 0 ) { chiffre[casex][temp
 if(chiffre[tempc1][casey].val[grille[casex][casey]] != 0 ) { chiffre[tempc1][casey].val[grille[casex][casey]] = 0; combi[tempc1][casey]--; }
 }
 
-casex = casex / 3;
-casex = 3 * casex;
-casey = casey / 3;
-casey = 3 * casey;
+carrex = 3 * (casex / 3);
+carrey = 3 * (casey / 3);
 
 for (tempc1 = 0; tempc1 < 3; tempc1++)
 {
 for (tempc2 = 0; tempc2 < 3; tempc2++)
 {
 
-if (chiffre[tempc1 + casex][tempc2 + casey].val[grille[casex][casey]] != 0 )
+if (chiffre[tempc1 + carrex][tempc2 + carrey].val[grille[casex][casey]] != 0 )
 {
-chiffre[tempc1 + casex][tempc2 + casey].val[grille[casex][casey]] = 0;
-combi[tempc1 + casex][tempc2 + casey]--;
-}}}
+chiffre[tempc1 + carrex][tempc2 + carrey].val[grille[casex][casey]] = 0;
+combi[tempc1 + carrex][tempc2 + carrey]--;
+}
+}}
 }
 }
 
@@ -661,7 +675,6 @@ Sleep (150);
      PrintMini( 66, 51, "EXE POUR", MINI_OR);
       PrintMini( 66, 58, "RECOMMENCER", MINI_OR); 
      Bdisp_PutDisp_DD();
-     key = 0;
       while (key != KEY_CTRL_EXE) { GetKey(&key); }
      restart = 1;
    }

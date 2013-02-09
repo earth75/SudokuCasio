@@ -717,7 +717,7 @@ PrintMini( 7*posx+2, 7*posy+2, &nbr, MINI_OR);
 Bdisp_AreaReverseVRAM( 7*posx+1, 7*posy+1, 7*posx+6, 7*posy+6  );
 }
 
-if ( n == 10 && cache[posx][posy] == 0)
+if ( n == 10 && posx < 9 && ( (cache[posx][posy] == 0 && mode == 1) || mode == 2 ))
 {
 feuille[posx][posy] = 0;
 for (temp1 = 0; temp1 <5; temp1++)

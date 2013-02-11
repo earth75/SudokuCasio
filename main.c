@@ -31,6 +31,7 @@ newTableau();
 PrintMini( 78, 1, "~SUDOKU~", MINI_OR); 
 PrintMini( 65, 7, "1:JOUER", MINI_OR); 
 PrintMini( 65, 13, "2:SOLVEUR", MINI_OR); 
+key = 0;
 while (key != KEY_CHAR_1 && key != KEY_CHAR_2)
 {
 GetKey(&key);
@@ -234,6 +235,7 @@ int Solveur()
   rempli = 0;
 PrintMini( 86, 7, "00/81", MINI_OR); 
 Bdisp_PutDisp_DD();
+Sleep (150);
   for (temp1 = 0 ; temp1 < 9 ; temp1++)
   {
   for (temp2 = 0 ; temp2 < 9 ; temp2++)
@@ -250,14 +252,14 @@ Bdisp_PutDisp_DD();
   {
     if (feuille [temp1][temp2] != 0)
     {
-  rempli ++;
+   rempli ++;
     recalcprobfeuille(temp1,temp2);
   } }}
 
 intToStrClk(&nbr, rempli);
-PrintMini( 86, 7, &mint , MINI_OVER);
+PrintMini( 86, 7, &nbr , MINI_OVER);
  Bdisp_PutDisp_DD();
-
+Sleep (150);
 
   do // boucle de résolution
   {
@@ -268,18 +270,16 @@ PrintMini( 86, 7, &mint , MINI_OVER);
      for (temp2 = 1; temp2 < 10; temp2++)
   {
   
-  
+  places = 0;
     for (temp3 = 0; temp3 < 9; temp3++) //lignes
   {
-    places = 0;
-    if (chiffre[temp1][temp3].val[temp2] == 1)
-    { places++;}
+    if (chiffre[temp1][temp3].val[temp2] == 1) { places++;}
   }
+
   if (places == 1)
   {
     temp3 = 0;
-    while(chiffre[temp1][temp3].val[temp2] == 0)
-    {temp3++;}
+    while(chiffre[temp1][temp3].val[temp2] == 0) {temp3++;}
     feuille[temp1][temp3] = temp2;
     rempli++;
     recalcprob(temp1, temp3);
@@ -288,12 +288,13 @@ PrintMini(7*temp1+2, 7*temp3+2, &nbr, MINI_OR);
 Bdisp_PutDisp_DD();
   }
   
+places = 0;
   for (temp3 = 0; temp3 < 9; temp3++) // colonnes
   {
-    places = 0;
-    if (chiffre[temp3][temp1].val[temp2] == 1)
-    { places++;}
+
+    if (chiffre[temp3][temp1].val[temp2] == 1) { places++;}
   }
+
   if (places == 1)
   {
     temp3 = 0;
@@ -307,12 +308,13 @@ PrintMini(7*temp3+2, 7*temp1+2, &nbr, MINI_OR);
 Bdisp_PutDisp_DD();
   }
   
+   places = 0;
   for (temp3 = 0; temp3 < 9; temp3++) // carrÃ©s
   {
-    places = 0;
-    if (chiffre[(temp3 - temp3 / 3) + (temp1 - temp1 / 3)][temp3 / 3 + temp1 / 3].val[temp2] == 1)
-    { places++;}
+ 
+    if (chiffre[(temp3 - temp3 / 3) + (temp1 - temp1 / 3)][temp3 / 3 + temp1 / 3].val[temp2] == 1) { places++;}
   }
+
   if (places == 1)
   {
     temp3 = 0;
@@ -661,6 +663,7 @@ if (posx == 9 && r == 1)
      {
       Bdisp_AreaClr_VRAM(&Menu);
       PrintMini( 65, 36, "FAUX!", MINI_OR); 
+key = 0;
 Sleep (150);
       PrintMini( 66, 51, "EXE POUR", MINI_OR);
       PrintMini( 66, 58, "RECOMMENCER", MINI_OR); 
@@ -672,6 +675,8 @@ Sleep (150);
    else if (mode ==2)
    {
      Solveur();
+key = 0;
+Sleep (150);
      PrintMini( 66, 51, "EXE POUR", MINI_OR);
       PrintMini( 66, 58, "RECOMMENCER", MINI_OR); 
      Bdisp_PutDisp_DD();

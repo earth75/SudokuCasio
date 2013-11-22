@@ -284,8 +284,8 @@ Sleep (150);
     rempli++;
     recalcprob(temp1, temp3);
     intToStrCase(&nbr, feuille[temp1][temp3]);
-PrintMini(7*temp1+2, 7*temp3+2, &nbr, MINI_OR);
-Bdisp_PutDisp_DD();
+    PrintMini(7*temp1+2, 7*temp3+2, &nbr, MINI_OR);
+    Bdisp_PutDisp_DD();
   }
   
 places = 0;
@@ -303,9 +303,9 @@ places = 0;
     feuille[temp3][temp1] = temp2;
     rempli++;
     recalcprobfeuille(temp3, temp1);
-intToStrCase(&nbr, feuille[temp3][temp1]);
-PrintMini(7*temp3+2, 7*temp1+2, &nbr, MINI_OR);
-Bdisp_PutDisp_DD();
+		intToStrCase(&nbr, feuille[temp3][temp1]);
+		PrintMini(7*temp3+2, 7*temp1+2, &nbr, MINI_OR);
+		Bdisp_PutDisp_DD();
   }
   
    places = 0;
@@ -324,14 +324,14 @@ Bdisp_PutDisp_DD();
     rempli++;
     recalcprobfeuille(((temp3 - temp3 / 3) + (temp1 - temp1 / 3)), (temp3 / 3 + temp1 / 3));
     intToStrCase(&nbr, feuille[(temp3 - temp3 / 3) + (temp1 - temp1 / 3)][temp3 / 3 + temp1 / 3]);
-PrintMini(7*((temp3 - temp3 / 3) + (temp1 - temp1 / 3)), 7*(temp3 / 3 + temp1 / 3)+2, &nbr, MINI_OR);
-Bdisp_PutDisp_DD();
+		PrintMini(7*((temp3 - temp3 / 3) + (temp1 - temp1 / 3)), 7*(temp3 / 3 + temp1 / 3)+2, &nbr, MINI_OR);
+		Bdisp_PutDisp_DD();
   }
   
   }}
-intToStrClk(&nbr, rempli);
-PrintMini( 86, 7, &nbr , MINI_OVER);
- Bdisp_PutDisp_DD();
+		intToStrClk(&nbr, rempli);
+		PrintMini( 86, 7, &nbr , MINI_OVER);
+ 		Bdisp_PutDisp_DD();
   }while (Verificationf() == 0);
   
   } 
@@ -648,7 +648,7 @@ int controle()  //#################################################
 temp1 = 0;
 while (temp1 == 0 )
 {
-if (IsKeyDown(KEY_CTRL_MENU)){GetKey(&key);} //pour retourner au menu j'ai pas trouv? mieux
+//if (IsKeyDown(KEY_CTRL_MENU)){GetKey(&key);} //pour retourner au menu j'ai pas trouv? mieux
 if (mode == 1) {Refreshclk();}
 temp1 = Interrupt();
 }
@@ -662,26 +662,26 @@ if (posx == 9 && r == 1)
      if (finpartie() == 0)
      {
       Bdisp_AreaClr_VRAM(&Menu);
-      PrintMini( 65, 36, "FAUX!", MINI_OR); 
-key = 0;
-Sleep (150);
+      PrintMini( 65, 36, "FAUX!", MINI_OR);
+      key = 0;
+      Sleep (150);
       PrintMini( 66, 51, "EXE POUR", MINI_OR);
       PrintMini( 66, 58, "RECOMMENCER", MINI_OR); 
-     Bdisp_PutDisp_DD();
+      Bdisp_PutDisp_DD();
       while (key != KEY_CTRL_EXE) { GetKey(&key); }
      }
      restart = 1;
    }
    else if (mode ==2)
    {
-     Solveur();
-key = 0;
-Sleep (150);
-     PrintMini( 66, 51, "EXE POUR", MINI_OR);
+      Solveur();
+      key = 0;
+      Sleep (150);
+      PrintMini( 66, 51, "EXE POUR", MINI_OR);
       PrintMini( 66, 58, "RECOMMENCER", MINI_OR); 
-     Bdisp_PutDisp_DD();
+      Bdisp_PutDisp_DD();
       while (key != KEY_CTRL_EXE) { GetKey(&key); }
-     restart = 1;
+      restart = 1;
    }
  }
  if (posy == 7)

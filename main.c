@@ -5,16 +5,20 @@
 unsigned char* intToStrClk(unsigned char* c, int n);
 unsigned char* intToStrCase(unsigned char* c, int n);
 
-DISPBOX Quadrillage;
-DISPBOX Menu;
-int temp1, temp2, temp3, temp4;
-long clkbuff1, clkbuff2, time, minutes, secondes, debut;
+DISPBOX Quadrillage; // zone du quadrillage
+DISPBOX Menu; //zone du menu
+int temp1, temp2, temp3, temp4;//buffers
+long clkbuff1, clkbuff2, time, minutes, secondes, debut; //buffer d'horloge 1&2, le temps écoulé en tick, minutes, secondes, le temps du début de la partie
 unsigned char* mint, scd, nbr;
-int d, x, y, r, n, gamefinished, exit, restart, posx, posy, mode;
-int casex, casey, carrex, carrey, combin, rnd, rndx, rndy, result, aide, f, done, lvl;
-int key, trig, carrex, carrey;
-int grille[9][9], cache[9][9], combi[9][9], feuille[9][9];
-Possib chiffre[9][9];
+int d, x, y, r, n, gamefinished; //?, ?, ?, ?, ?, état du jeu (en cours ou fini)
+int exit, restart, posx, posy, mode; //
+int casex, casey, combin, rnd, rndx, rndy, result, aide, f, done, lvl;
+int key, trig, carrex, carrey; //buffer de touche, ?, l'abscsse et l'ordinnée du carré utilisé
+int grille[9][9]; //contient la grille affichée
+int cache[9][9]; //contiient les cases à afficher
+int combi[9][9]; //contient le nombre de chiffres possibles dans chaque case
+int feuille[9][9]; //contient le tableau à résoudre
+Possib chiffre[9][9]; //contient les différentes posibilités pour chaque case
 
 //----------------------------------------------------------------------------
 //MAIN  #################################################
